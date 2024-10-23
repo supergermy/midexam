@@ -45,36 +45,32 @@ class PropertyRegressors(nn.Module):
         
         self.rdkit = PropertyRegressor(210, hid_dim, out_dim)
         self.morgan = PropertyRegressor(2048, hid_dim, out_dim)
-        self.mol2vec = PropertyRegressor(300, hid_dim, out_dim)
         self.chembert2a = PropertyRegressor(600, hid_dim, out_dim)
         self.molformer = PropertyRegressor(768, hid_dim, out_dim)
         
-        self.lambdas = nn.Parameter(torch.ones([5,1]))
+        self.lambdas = nn.Parameter(torch.ones([4,1]))
     
     def forward(
         self,
         rdkit: Tensor,
         morgan: Tensor,
-        mol2vec: Tensor,
         chembert2a: Tensor,
         molformer: Tensor,
     ) -> tuple[Tensor, Tensor]:
         
         rdkit_out = self.rdkit(rdkit)
         morgan_out = self.morgan(morgan)
-        mol2vec_out = self.mol2vec(mol2vec)
         chembert2a_out = self.chembert2a(chembert2a)
         molformer_out = self.molformer(molformer)
         
         before_vote = torch.stack([
             rdkit_out,
             morgan_out,
-            mol2vec_out,
             chembert2a_out,
             molformer_out,
         ], dim=1)  # shape: [batch_size, 5, out_dim]
         
-        lambdas = repeat(self.lambdas / (self.lambdas.sum() + 1e-8), 'five one -> batch_size five one', batch_size = rdkit.shape[0])
+        lambdas = repeat(self.lambdas / (self.lambdas.sum() + 1e-8), 'four one -> batch_size four one', batch_size = rdkit.shape[0])
         
         after_vote = einsum(lambdas, before_vote, 'b f o, b f o -> b f o') # shape: [batch_size, 5, out_dim]
         

@@ -19,3 +19,5 @@ doc/*.txt
 doc/**/*.pdf
 
 *.egg-info/
+
+*/__pycache__
