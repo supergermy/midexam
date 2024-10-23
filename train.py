@@ -44,10 +44,11 @@ def train():
     
     # Training loop
     model.train()
+    epoch_loss = 0.0
+    
     for epoch in range(epochs):
-        epoch_loss = 0.0
         
-        for batch_idx, (rdkit, morgan, mol2vec, chembert2a, molformer, target) in enumerate(tqdm(dataloader)):
+        for batch_idx, (rdkit, morgan, mol2vec, chembert2a, molformer, target) in enumerate(dataloader):
             optimizer.zero_grad()
             
             # Forward pass
@@ -62,14 +63,15 @@ def train():
             
             epoch_loss += loss.item()
             
-            # Print batch progress
-            if batch_idx % 10 == 0:
-                print(f'Epoch: {epoch}, Batch: {batch_idx}, Loss: {loss.item():.4f}')
-                print(f'Lambda weights: {(lambdas / lambdas.sum()).squeeze().detach().numpy()}')
+            # # Print batch progress
+            # if batch_idx % 10 == 0:
+            #     print(f'Epoch: {epoch}, Batch: {batch_idx}, Loss: {loss.item():.4f}')
+            #     print(f'Lambda weights: {(lambdas / lambdas.sum()).squeeze().detach().numpy()}')
         
         # Print epoch results
         avg_epoch_loss = epoch_loss / len(dataloader)
         print(f'Epoch {epoch} completed. Average loss: {avg_epoch_loss:.4f}')
+        epoch_loss = 0.0
 
 if __name__ == "__main__":
     train()
