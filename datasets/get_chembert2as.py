@@ -9,16 +9,16 @@ import warnings
 # Suppress the specific warning related to RobertaLMHeadModel
 warnings.filterwarnings("ignore", message=".*RobertaForMaskedLM*")
 
-device = "cuda:0" if torch.cuda.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 chemberta = AutoModelForMaskedLM.from_pretrained("DeepChem/ChemBERTa-77M-MTR").to(device)
 tokenizer = AutoTokenizer.from_pretrained("DeepChem/ChemBERTa-77M-MTR")
 
 def get_chembert2as(task):
     """Convert SMILES to fingerprints and return as torch tensor"""
     if task == 'classification':
-        tsv_path = 'datasets/B3DB_classification.tsv'
+        tsv_path = '../datasets/B3DB_classification.tsv'
     elif task == 'regression':
-        tsv_path = 'datasets/B3DB_regression.tsv'
+        tsv_path = '../datasets/B3DB_regression.tsv'
     else:
         raise KeyError(f'task should be either "classification" or "regression", but got {task}')
     df = pd.read_csv(tsv_path, sep='\t')

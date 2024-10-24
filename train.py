@@ -16,7 +16,7 @@ device = "cuda:0" if torch.cuda.is_available() else "cpu"
 def train(rdkit_data, morgan_data, chembert2a_data, molformer_data, label_tensor):
     # Hyperparameters
     batch_size = 32
-    epochs = 100
+    epochs = 10
     learning_rate = 1e-4
     hidden_dim = 256
     output_dim = 1  # or whatever your target dimension is
