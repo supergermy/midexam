@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from einops import rearrange, repeat, reduce, einsum
 import math
-from models.DifferentialAttention import DiffAttn
 
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model):
@@ -62,20 +61,15 @@ class PropertyRegressors(nn.Module):
     ):
         super().__init__()
         
-        self.rdkit = PropertyRegressor(210, hid_dim, out_dim)
+        self.rdkit = PropertyRegressor(20, hid_dim, out_dim)
         self.morgan = PropertyRegressor(2048, hid_dim, out_dim)
         self.chembert2a = PropertyRegressor(600, hid_dim, out_dim)
         self.molformer = PropertyRegressor(768, hid_dim, out_dim)
         
         self.lambdas = nn.Parameter(torch.ones([4,1]))
         
-        self.rdkit_norm = nn.InstanceNorm1d(210)
-        # self.morgan_norm = nn.InstanceNorm1d(2048)
-        self.chembert2a_norm = nn.InstanceNorm1d(600)
-        self.molformer_norm = nn.InstanceNorm1d(768)
-        
         self.morgan_pe = PositionalEncoding(2048)
-        self.rdkit_pe = PositionalEncoding(210)
+        self.rdkit_pe = PositionalEncoding(20)
     
     def forward(
         self,
@@ -84,14 +78,7 @@ class PropertyRegressors(nn.Module):
         chembert2a: Tensor,
         molformer: Tensor,
     ) -> tuple[Tensor, Tensor]:
-        # print(self.lambdas)
         
-        rdkit = self.rdkit_norm(rdkit)
-        # morgan = self.morgan_norm(morgan)
-        chembert2a = self.chembert2a_norm(chembert2a)
-        molformer = self.molformer_norm(molformer)
-        
-        rdkit = self.rdkit_pe(rdkit)
         morgan = self.morgan_pe(morgan)
         
         rdkit_out = self.rdkit(rdkit)

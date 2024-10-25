@@ -29,7 +29,7 @@ def get_fingerprints(task):
     label_list = []
     mfgen = rdFingerprintGenerator.GetMorganGenerator(radius=2, fpSize=2048)
 
-    for smiles, label in tqdm(zip(df['SMILES'], df['BBB+/BBB-']), desc='get_fingerprints', total=len(df)):
+    for smiles, label in tqdm(zip(df['SMILES'], df['BBB+/BBB-'] if task == 'classification' else df['logBB']), desc='get_fingerprints', total=len(df)):
         fp = generate_ecfp(smiles, mfgen)
         fp_list.append(fp)
         label_list.append(label)
@@ -45,6 +45,6 @@ def get_fingerprints(task):
     label_array = np.nan_to_num(label_array)  # Replace NaN with 0
     
     # Convert to torch tensor
-    label_tensor = torch.tensor(label_array, dtype=torch.float32)
+    label_tensor = torch.tensor(label_array, dtype=torch.float32).view(-1,1)
 
     return desc_tensor.to(device), label_tensor.to(device)

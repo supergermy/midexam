@@ -94,7 +94,7 @@ def create_data_loaders(descriptors, fingerprints, chembert2as, molformers, labe
         batch_size=batch_size,
         shuffle=True,
         num_workers=0,
-        pin_memory=True
+        pin_memory=False
     )
     
     val_loader = DataLoader(
@@ -102,7 +102,7 @@ def create_data_loaders(descriptors, fingerprints, chembert2as, molformers, labe
         batch_size=batch_size,
         shuffle=False,
         num_workers=0,
-        pin_memory=True
+        pin_memory=False
     )
     
     return train_loader, val_loader
