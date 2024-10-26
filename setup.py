@@ -9,5 +9,10 @@ setup(
         'numpy',
         'pandas',
         'scikit-learn',
+        'transformers',
+        'matplotlib',
+        'torchmetrics',
+        'einops',
+        'rdkit',
     ],
 )
