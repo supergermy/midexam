@@ -25,9 +25,9 @@ def get_molecular_descriptors(task):
     ]
     
     if task == 'classification':
-        tsv_path = '../datasets/B3DB_classification.tsv'
+        tsv_path = 'B3DB_classification.tsv'
     elif task == 'regression':
-        tsv_path = '../datasets/B3DB_regression.tsv'
+        tsv_path = 'B3DB_regression.tsv'
     else:
         raise KeyError(f'task should be either "classification" or "regression", but got {task}')
     
