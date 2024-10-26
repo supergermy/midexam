@@ -1,7 +1,5 @@
-from .PropertyRegressors import MolecularPropertyRegressor
-from .DifferentialAttention import DifferentialAttentionModel
+from .PropertyRegressors import PropertyRegressors
 
 __all__ = [
-    'MolecularPropertyRegressor',
-    'DifferentialAttentionModel',
+    'PropertyRegressors',
 ]
